@@ -56,8 +56,13 @@ function 7_DB() {
         port=${port:-3306}
 
         echo "Запуск контейнера для образу з тегом: $tag"
-        docker pull mysql:"$tag"
-        docker run --name mysql-container-$tag -e MYSQL_ROOT_PASSWORD="$mysql_password" -p "$port":3306 -d mysql:$tag
+        if [[ "$db_name" == "mariadb" ]]; then
+            docker pull mariadb:"$tag"
+            docker run --name mariadb-container-$tag -e MYSQL_ROOT_PASSWORD="$mysql_password" -p "$port":3306 -d mariadb:$tag
+        elif [[ "$db_name" == "mysql" ]]; then
+            docker pull mysql:"$tag"
+            docker run --name mysql-container-$tag -e MYSQL_ROOT_PASSWORD="$mysql_password" -p "$port":3306 -d mysql:$tag
+        fi
     }
 
     list_installed_images() {
@@ -100,7 +105,7 @@ function 7_DB() {
         4) docker ps ;;
         0) break ;;
         00) 0_funExit ;;
-        
+
         *)
             echo "Недійсна опція. Будь ласка, виберіть ще раз."
             ;;
