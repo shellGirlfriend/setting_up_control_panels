@@ -5,6 +5,8 @@ function 7_DB() {
         echo -e "\nВиберіть дію:\n"
         echo -e "1. MySQL"
         echo -e "2. MariaDB"
+        echo -e "3. MongoDB"
+        echo -e "4. PostgreSQL"
         echo -e "\n0. Вийти з цього підменю!"
         echo -e "00. Закінчити роботу скрипта\n"
 
@@ -13,6 +15,8 @@ function 7_DB() {
         case $choice in
         1) 7_docker_DB "mysql" ;;
         2) 7_docker_DB "mariadb" ;;
+        2) 7_docker_DB "mongodb" ;;
+        2) 7_docker_DB "postgresql" ;;
         0) break ;;
         00) 0_funExit ;;
         *) 0_invalid ;;
@@ -24,11 +28,14 @@ function 7_DB() {
     # tags=( "8.1.0" "8.1" "8" "innovation" "latest" "8.1.0-oracle" "8.1-oracle" "8-oracle" "innovation-oracle" "oracle" "8.0.34" "8.0"
     #    "8.0.34-oracle" "8.0-oracle" "8.0.34-debian" "8.0-debian" "5.7.43" "5.7" "5" "5.7.43-oracle" "5.7-oracle" "5-oracle")
     db_name="$1"
-    echo "test1"
     if [[ "$db_name" == "mariadb" ]]; then
         tags=($(curl -s "https://hub.docker.com/v2/repositories/library/mariadb/tags/" | jq -r '.results[].name'))
     elif [[ "$db_name" == "mysql" ]]; then
         tags=($(curl -s "https://hub.docker.com/v2/repositories/library/mysql/tags/" | jq -r '.results[].name'))
+    elif [[ "$db_name" == "mongodb" ]]; then
+        tags=($(curl -s "https://hub.docker.com/v2/repositories/library/mongo/tags/" | jq -r '.results[].name'))
+    elif [[ "$db_name" == "postgresql" ]]; then
+        tags=($(curl -s "https://hub.docker.com/v2/repositories/library/postgres/tags/" | jq -r '.results[].name'))
     else
         echo -e "${RED}База даних не підтримується: $db_name${RESET}"
         exit 1
@@ -63,7 +70,17 @@ function 7_DB() {
         elif [[ "$db_name" == "mysql" ]]; then
             docker pull mysql:"$tag"
             docker run --name mysql-container-$tag -e MYSQL_ROOT_PASSWORD="$mysql_password" -p "$port":3306 -d mysql:$tag
+        elif [[ "$db_name" == "mongodb" ]]; then
+            docker pull mongo:"$tag"
+            docker run --name mongo-container-$tag -e MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD="$mongo_password" -p "$port":27017 -d mongo:$tag
+        elif [[ "$db_name" == "postgresql" ]]; then
+            docker pull postgres:"$tag"
+            docker run --name postgres-container-$tag -e POSTGRES_PASSWORD="$postgres_password" -p "$port":5432 -d postgres:$tag
+        else
+            echo -e "${RED}База даних не підтримується: $db_name${RESET}"
+            exit 1
         fi
+
     }
 
     list_installed_images() {
@@ -97,7 +114,7 @@ function 7_DB() {
         echo -e "\n0. Вийти з цього підменю!"
         echo -e "00. Закінчити роботу скрипта\n"
 
-        read -p "Виберіть варіант (1/2/3/4/0):" choice
+        read -p "Виберіть варіант:" choice
 
         case $choice in
         1) install_images ;;
