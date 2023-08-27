@@ -24,6 +24,7 @@ function 7_DB() {
     # tags=( "8.1.0" "8.1" "8" "innovation" "latest" "8.1.0-oracle" "8.1-oracle" "8-oracle" "innovation-oracle" "oracle" "8.0.34" "8.0"
     #    "8.0.34-oracle" "8.0-oracle" "8.0.34-debian" "8.0-debian" "5.7.43" "5.7" "5" "5.7.43-oracle" "5.7-oracle" "5-oracle")
     db_name="$1"
+    echo "test1"
     if [[ "$db_name" == "mariadb" ]]; then
         tags=($(curl -s "https://hub.docker.com/v2/repositories/library/mariadb/tags/" | jq -r '.results[].name'))
     elif [[ "$db_name" == "mysql" ]]; then
