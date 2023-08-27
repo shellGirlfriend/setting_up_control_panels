@@ -15,8 +15,8 @@ function 7_DB() {
         case $choice in
         1) 7_docker_DB "mysql" ;;
         2) 7_docker_DB "mariadb" ;;
-        2) 7_docker_DB "mongodb" ;;
-        2) 7_docker_DB "postgresql" ;;
+        3) 7_docker_DB "mongodb" ;;
+        4) 7_docker_DB "postgresql" ;;
         0) break ;;
         00) 0_funExit ;;
         *) 0_invalid ;;
