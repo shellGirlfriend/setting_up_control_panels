@@ -10,7 +10,7 @@ function 7_DB() {
         echo -e "\n0. Вийти з цього підменю!"
         echo -e "00. Закінчити роботу скрипта\n"
 
-        read -p "Виберіть варіант (1/2/3/4/5/6/7/8/9/0):" choice
+        read -p "Виберіть варіант:" choice
 
         case $choice in
         1) 7_docker_DB "mysql" ;;
@@ -80,7 +80,6 @@ function 7_DB() {
             echo -e "${RED}База даних не підтримується: $db_name${RESET}"
             exit 1
         fi
-
     }
 
     list_installed_images() {
